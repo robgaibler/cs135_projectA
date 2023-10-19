@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 import numpy as np
 import pandas as pd
 import os
@@ -23,10 +17,6 @@ if __name__ == '__main__':
     tr_text_list = x_train_data['text'].values.tolist()
     te_text_list = x_test_data['text'].values.tolist()
 
-
-# In[47]:
-
-
 # Part 1A: Vectorize and clean data
 
 vectorizer = CountVectorizer(stop_words='english', token_pattern="[a-z]+", min_df=2,
@@ -37,17 +27,6 @@ x_test_NF = vectorizer.transform(te_text_list).toarray()
 y_train_N = y_train_data['is_positive_sentiment'].values
 
 N, F = x_train_NF.shape
-
-
-# In[49]:
-
-
-print(x_train_NF.shape)
-print(x_test_NF.shape)
-
-
-# In[48]:
-
 
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.model_selection import GridSearchCV
@@ -72,10 +51,6 @@ params = grid_result.cv_results_['params']
 for mean, stdev, param in zip(means, stds, params):
     print("%f (%f) with: %r" % (mean, stdev, param))
 
-
-# In[41]:
-
-
 #retrain optimized model to the entire training set
 C=grid_result.best_params_['C']
 pen=grid_result.best_params_['penalty']
@@ -88,17 +63,7 @@ bestmodel.fit(x_train_NF, y_train_N)
 prediction = bestmodel.predict(x_test_NF)
 predictionprob=bestmodel.predict_proba(x_test_NF)[:,1]
 
-
-# In[42]:
-
-
 #save probabilities to txt file 
 yproba1_test = np.array(predictionprob)
 np.savetxt("yproba1_test.txt", yproba1_test)
-
-
-# In[ ]:
-
-
-
 
